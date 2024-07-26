@@ -13,9 +13,11 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::table('students', function (Blueprint $table) {
-            $table->unsignedBigInteger('group_fk');
-            $table->foreign('group_fk')->references('id')->on('groups')->onDelete('cascade');
+        Schema::create('modules', function (Blueprint $table) {
+            $table->bigIncrements('module_id');
+            $table->string('module_name');
+            $table->string('short_cut');
+            $table->timestamps();
         });
     }
 
@@ -26,9 +28,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::table('students', function (Blueprint $table) {
-            $table->dropColumn('group_fk');
-            
-        });
+        Schema::dropIfExists('modules');
     }
 };

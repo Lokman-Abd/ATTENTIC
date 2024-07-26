@@ -13,9 +13,12 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('groups', function (Blueprint $table) {
-            $table->bigIncrements('group_id');
-            $table->string('group_name');
+        Schema::create('admins', function (Blueprint $table) {
+            $table->bigIncrements('admin_id');
+            $table->string('admin_first_name');
+            $table->string('admin_last_name');
+            $table->string('admin_password');
+            $table->string('admin_email')->unique();
             $table->timestamps();
         });
     }
@@ -27,6 +30,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('groups');
+        Schema::dropIfExists('admins');
     }
 };

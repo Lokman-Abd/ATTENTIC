@@ -13,9 +13,9 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('groups', function (Blueprint $table) {
-            $table->bigIncrements('group_id');
-            $table->string('group_name');
+        Schema::create('sessions', function (Blueprint $table) {
+            $table->bigIncrements('session_id');
+            $table->date('session_date');
             $table->timestamps();
         });
     }
@@ -27,6 +27,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('groups');
+        Schema::dropIfExists('sessions');
     }
 };
