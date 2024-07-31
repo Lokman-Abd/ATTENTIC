@@ -1,12 +1,12 @@
 <!--non-changing part-->
-@include("admin.Includes.topLayout")
+<?php echo $__env->make("admin.Includes.topLayout", \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?>
 
 <!-- Container Fluid-->
 <div class="container-fluid" id="container-wrapper">
   <div class="d-sm-flex align-items-center justify-content-between mb-4">
     <h1 class="h3 mb-0 text-gray-800">Excluded Students</h1>
     <ol class="breadcrumb">
-      <li class="breadcrumb-item"><a href="{{route('dashboard')}}">Home</a></li>
+      <li class="breadcrumb-item"><a href="<?php echo e(route('dashboard')); ?>">Home</a></li>
       <li class="breadcrumb-item active" aria-current="page">Show Excluded Students</li>
     </ol>
   </div>
@@ -36,16 +36,16 @@
                 <tbody>
                   <!-- DB -->
                   <!-- sample -->
-                 @foreach($excludedStudents as $excludedStudent)
+                 <?php $__currentLoopData = $excludedStudents; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $excludedStudent): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                   <tr>
-                    <td>{{$excludedStudent->student_id}}</td>
-                    <td>{{$excludedStudent->student_first_name}}</td>
-                    <td>{{$excludedStudent->student_last_name}}</td>
-                    <td>{{$excludedStudent->group_id}}</td>
-                    <td>{{$excludedStudent->short_cut}}</td>
-                    <td>{{$excludedStudent->type}}</td>
+                    <td><?php echo e($excludedStudent->student_id); ?></td>
+                    <td><?php echo e($excludedStudent->student_first_name); ?></td>
+                    <td><?php echo e($excludedStudent->student_last_name); ?></td>
+                    <td><?php echo e($excludedStudent->group_id); ?></td>
+                    <td><?php echo e($excludedStudent->short_cut); ?></td>
+                    <td><?php echo e($excludedStudent->type); ?></td>
                   </tr>
-                @endforeach
+                <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                 </tbody>
               </table>
             </div>
@@ -62,7 +62,7 @@
 </div>
 
 <!--non-changing part-->
-@include("admin.Includes.bottomLayout")
+<?php echo $__env->make("admin.Includes.bottomLayout", \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?>
 
 <!-- Page level custom scripts -->
 <script>
@@ -79,4 +79,4 @@
 </script>
 </body>
 
-</html>
+</html><?php /**PATH C:\Users\Lokmane\Desktop\example-app\resources\views/admin/show_excluded_students.blade.php ENDPATH**/ ?>

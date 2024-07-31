@@ -82,7 +82,7 @@ class Absence extends Pivot
             ->whereBetween('sessions.session_date', [$start_date, date('Y-m-d', strtotime($end_date . ' +1 day'))])
             ->get()->pluck('absence_id')->toArray();
     }
-    public static function  getExcludedStudents()
+public static function  getExcludedStudents()
     {
         $res1 = DB::table('absences')
             ->join('study', 'absences.study_id', '=', 'study.study_id')

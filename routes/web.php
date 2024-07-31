@@ -47,7 +47,7 @@ Route::controller(ForgotPasswordController::class)->group(function () {
 });
 
 // CRUD Teacher 
-Route::prefix('Admin')->middleware(['auth:admin'])->group(function () {
+Route::prefix('admin')->middleware(['auth:admin'])->group(function () {
     Route::controller(TeacherController::class)->group(function () {
         Route::get('Dashboard', 'dashboard')->name('dashboard');
         Route::get('Manage/Teachers', 'manage')->name('manageTeacher');
@@ -61,15 +61,15 @@ Route::prefix('Admin')->middleware(['auth:admin'])->group(function () {
 
     // END CRUD Teacher 
     // CRUD Student 
+    // Route::resource('student',StudentController::class);
+    Route::resource('students', StudentController::class,[
+        'except'=>['show']
+    ]);
     Route::controller(StudentController::class)->group(function () {
-        Route::get('Manage/Students', 'manage')->name('manageStudent');
-        Route::post('Store/Student', 'store')->name('storeStudent');
-        Route::post('Destroy/Student', 'destroy')->name('destroyStudent');
-        Route::post('Edit/Student', 'edit')->name('editStudent');
-        Route::post('Update/Student', 'update')->name('updateStudent');
-        Route::get('Edit/Student/Password/{id}',  'editStudentPassword')->name('editStudentPassword');
-        Route::post('Update/Student/Password',  'updateStudentPassword')->name('updateStudentPassword');
-        Route::get('Show/Students/Excluded',  'displayExcludedStudents')->name('displayExcludedStudents');
+        Route::get('students/{student}/edit/password',  'editStudentPassword')->name('student.editPassword');
+        Route::post('students/{student}/edit/password',  'updateStudentPassword')->name('updateStudentPassword');
+        Route::get('students/excluded',  'displayExcludedStudents')->name('displayExcludedStudents');
+
     });
 
     // END CRUD Student 

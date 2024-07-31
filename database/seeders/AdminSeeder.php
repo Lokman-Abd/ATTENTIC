@@ -20,7 +20,7 @@ class AdminSeeder extends Seeder
       $admin = new Admin;
       $admin->admin_first_name = 'John';
       $admin->admin_last_name = 'Doe';
-      $admin->admin_password = Hash::make('password123'); // Use Hash facade to hash the password
+      $admin->admin_password = Hash::make('123456'); // Use Hash facade to hash the password
       $admin->admin_email = 'lokmane.abdessalam@univ-constantine2.dz';
       $admin->save();
     }

@@ -1,5 +1,5 @@
 <!--non-changing part-->
-@include("admin.Includes.topLayout")
+<?php echo $__env->make("admin.Includes.topLayout", \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?>
 
 <!-- Container Fluid-->
 <div class="container-fluid" id="container-wrapper">
@@ -7,7 +7,7 @@
   <div class="d-sm-flex align-items-center justify-content-between mb-4">
     <h1 class="h3 mb-0 text-gray-800">Manage Students</h1>
     <ol class="breadcrumb">
-      <li class="breadcrumb-item"><a href="{{route('dashboard')}}">Home</a></li>
+      <li class="breadcrumb-item"><a href="<?php echo e(route('dashboard')); ?>">Home</a></li>
       <li class="breadcrumb-item active" aria-current="page">Manage Students</li>
     </ol>
   </div>
@@ -22,23 +22,23 @@
           update student password
         </div>
         <div class="card-body">
-          <form method="post" action='{{route("updateStudentPassword",$student_id)}}'>
-            @csrf
+          <form method="post" action='<?php echo e(route("updateStudentPassword",$student_id)); ?>'>
+            <?php echo csrf_field(); ?>
             <div class="form-group row mb-3">
 
 
               <div class="col-xl-6">
                 <label class="form-control-label">New Password<span class="text-danger ml-2">*</span></label>
                 <input type="password" class="form-control" required name="student_new_password">
-                @if($errors->has('student_new_password'))
-                <span class="text-danger">{{$errors->first('student_new_password')}}</span>
-                @endif
+                <?php if($errors->has('student_new_password')): ?>
+                <span class="text-danger"><?php echo e($errors->first('student_new_password')); ?></span>
+                <?php endif; ?>
               </div>
               <div class="col-xl-6">
                 <label class="form-control-label">confirm password<span class="text-danger ml-2">*</span></label>
                 <input type="password" class="form-control" required name="student_new_password_confirmation">
               </div>
-              <input type="hidden" name="student_id" value="{{$student_id}}">
+              <input type="hidden" name="student_id" value="<?php echo e($student_id); ?>">
               <div class="col-xl-6 mt-3">
                 <button type="submit" id='submit' class="btn btn-primary">Update</button>
 
@@ -59,4 +59,4 @@
 
 
 <!--non-changing part-->
-@include("admin.Includes.bottomLayout")
+<?php echo $__env->make("admin.Includes.bottomLayout", \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?><?php /**PATH C:\Users\Lokmane\Desktop\example-app\resources\views/admin/student/update_student_password.blade.php ENDPATH**/ ?>

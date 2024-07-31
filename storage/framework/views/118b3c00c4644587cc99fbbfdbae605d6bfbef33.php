@@ -7,36 +7,36 @@
     <li class="nav-item dropdown no-arrow mx-1">
       <div class="nav-link dropdown-toggle clickable" id="alertsDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
         <i class="fas fa-bell fa-fw"></i>
-        <span class="badge badge-danger badge-counter">@if($count >0){{$count}}+@endif</span>
+        <span class="badge badge-danger badge-counter"><?php if($count >0): ?><?php echo e($count); ?>+<?php endif; ?></span>
       </div>
       <div class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="alertsDropdown">
         <h6 class="dropdown-header">
           Alerts Center
         </h6>
-        @if($count>0)
-        <a class="dropdown-item d-flex align-items-center" href="{{route('displayJustifications')}}">
+        <?php if($count>0): ?>
+        <a class="dropdown-item d-flex align-items-center" href="<?php echo e(route('displayJustifications')); ?>">
           <div class="mr-3">
             <div class="icon-circle bg-primary">
               <i class="fas fa-file-alt text-white"></i>
             </div>
           </div>
           <div>
-            <div class="small text-gray-500">{{date('Y-m-d l')}}</div>
-            <span class="font-weight-bold">You have {{$count}} untraited Justifications</span>
+            <div class="small text-gray-500"><?php echo e(date('Y-m-d l')); ?></div>
+            <span class="font-weight-bold">You have <?php echo e($count); ?> untraited Justifications</span>
           </div>
         </a>
-        @endif
+        <?php endif; ?>
         <span class="dropdown-item text-center small text-gray-500">Nothing to show</span>
       </div>
     </li>
     <div class="topbar-divider d-none d-sm-block"></div>
     <li class="nav-item dropdown no-arrow">
       <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-        <img class="img-profile rounded-circle" src="{{ asset('img/user-icn.png')}}" style="max-width: 60px">
-        <span class="ml-2 d-none d-lg-inline text-white small"><b>Wellcome {{auth()->user()->getFullName()}}</b></span>
+        <img class="img-profile rounded-circle" src="<?php echo e(asset('img/user-icn.png')); ?>" style="max-width: 60px">
+        <span class="ml-2 d-none d-lg-inline text-white small"><b>Wellcome <?php echo e(auth()->user()->getFullName()); ?></b></span>
       </a>
       <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="userDropdown">
-        <a class="dropdown-item" href="{{route('updatePassword',['Auth'=>'Admin'])}}">
+        <a class="dropdown-item" href="<?php echo e(route('updatePassword',['Auth'=>'Admin'])); ?>">
           <i class="fas fa-lock fa-sm fa-fw mr-2 text-gray-400"></i>
           Update Password
         </a>
@@ -50,7 +50,7 @@
                   Activity Log
                 </a> -->
         <div class="dropdown-divider"></div>
-        <a class="dropdown-item" href="{{route('logout')}}">
+        <a class="dropdown-item" href="<?php echo e(route('logout')); ?>">
           <i class="fas fa-power-off fa-fw mr-2 text-danger"></i>
           Logout
         </a>
@@ -58,3 +58,4 @@
     </li>
   </ul>
 </nav>
+<?php /**PATH C:\Users\Lokmane\Desktop\example-app\resources\views/admin/Includes/topbar.blade.php ENDPATH**/ ?>

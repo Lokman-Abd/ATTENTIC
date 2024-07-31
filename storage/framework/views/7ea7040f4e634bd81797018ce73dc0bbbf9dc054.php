@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="">
+  <meta name="author" content="">
+  <link href="<?php echo e(asset('img/logo/icon.png')); ?>" rel="icon">
+  <title>NTIC - Login</title>
+  <link href="<?php echo e(asset('vendor/fontawesome-free/css/all.min.css')); ?>" rel="stylesheet" type="text/css">
+  <link href="<?php echo e(asset('vendor/bootstrap/css/bootstrap.min.css')); ?>" rel="stylesheet" type="text/css">
+  <link href="<?php echo e(asset('css/ruang-admin.min.css')); ?>" rel="stylesheet">
+</head>
+
+<body>
+  <div class="bg">
+    <!-- Login Content -->
+    <div class="container-login">
+      <div class="row justify-content-center">
+        <div class="col-xl-6 col-lg-12 col-md-9">
+          <div class="card shadow-sm my-5">
+            <div class="card-body p-0">
+              <div class="row">
+                <div class="col-lg-12">
+                  <div class="login-form">
+                    <div class="text-center">
+                      <img src="<?php echo e(asset('img/logo/logoRounded.png')); ?>" style="width:100px;height:100px">
+                      <br><br>
+                      <h1 class="h4 text-gray-900 mb-4">Login</h1>
+                    </div>
+                    <?php if(session('errors')): ?>
+                    <div class="alert alert-danger" role="alert">
+                      <?php echo e(session('errors')->first()); ?>
+
+                    </div>
+                    <?php endif; ?>
+                    <?php if(session('success')): ?>
+                    <div class="alert alert-success text-center" role="alert">
+                      <?php echo e(session('success')); ?>
+
+                    </div>
+                    <?php endif; ?>
+                    <form class="user" method="Post" action="<?php echo e(route('checkLoginGuard')); ?>">
+                      <?php echo csrf_field(); ?>
+                      <div class="form-group">
+                        <select name="userType" required class="form-control mb-3">
+                          <option value="">--Select User Roles--</option>
+                          <option <?php echo e((old("userType") == 'admin' ? "selected":"")); ?> value="admin">Admin</option>
+                          <option <?php echo e((old("userType") == 'teacher' ? "selected":"")); ?> value="teacher">Teacher</option>
+                          <option <?php echo e((old("userType") == 'student' ? "selected":"")); ?> value="student">Student</option>
+                        </select>
+                        <?php if($errors->has('userType')): ?>
+                        <span class="text-danger"><?php echo e($errors->first('userType')); ?></span>
+                        <?php endif; ?>
+                      </div>
+                      <div class="form-group">
+                        <input type="email" class="form-control" required name="email" id="exampleInputEmail" value="<?php echo e(old('email')); ?>" placeholder="Enter Email Address">
+                        <?php if($errors->has('email')): ?>
+                        <span class="text-danger"><?php echo e($errors->first('email')); ?></span>
+                        <?php endif; ?>
+                      </div>
+                      <div class="input-group mb-3">
+                        <input type="password" name="password" required="" class="form-control" value="<?php echo e(old('password')); ?>" id="InputPassword" placeholder="Enter Password">
+                        <div id="show_password" class="input-group-append clickable">
+                          <span class="input-group-text " id="basic-addon2"><i class="fas fa-eye-slash"></i></span>
+                        </div>
+                      </div>
+                      <?php if($errors->has('password')): ?>
+                      <span class="text-danger"><?php echo e($errors->first('password')); ?></span>
+                      <?php endif; ?>
+
+                      <div class="form-group">
+                        <input type='submit' name="login" value='Login' class="btn btn-primary btn-block">
+                      </div>
+                      <!-- <hr>
+                        <a href="index.html" class="btn btn-google btn-block">
+                          <i class="fab fa-google fa-fw"></i> Login with Google
+                        </a>
+                        <a href="index.html" class="btn btn-facebook btn-block">
+                          <i class="fab fa-facebook-f fa-fw"></i> Login with Facebook
+                        </a> -->
+                    </form>
+                    <hr>
+                    <div class="text-center">
+                      <a class="font-weight-bold small" href="<?php echo e(route('forget.password.get')); ?>">Forgot Password !</a>
+                    </div>
+                    <!-- <div class="text-center">
+                      </div> -->
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div>
+      <svg class="waves" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 24 150 28" preserveAspectRatio="none" shape-rendering="auto">
+        <defs>
+          <path id="gentle-wave" d="M-160 44c30 0 58-18 88-18s 58 18 88 18 58-18 88-18 58 18 88 18 v44h-352z" />
+        </defs>
+        <g class="parallax">
+          <use xlink:href="#gentle-wave" x="48" y="0" fill="rgba(255,255,255,0.7" />
+          <use xlink:href="#gentle-wave" x="48" y="3" fill="rgba(255,255,255,0.5)" />
+          <use xlink:href="#gentle-wave" x="48" y="5" fill="rgba(255,255,255,0.3)" />
+          <use xlink:href="#gentle-wave" x="48" y="7" fill="#fff" />
+        </g>
+      </svg>
+    </div>
+  </div>
+  <!-- this page's style -->
+  <style>
+    @import url(//fonts.googleapis.com/css?family=Lato:300:400);
+
+    .bg {
+      position: relative;
+      background: linear-gradient(60deg, rgba(84, 58, 183, 1) 0%, rgba(0, 172, 193, 1) 100%);
+    }
+
+    .waves {
+      position: relative;
+      width: 100%;
+      height: 15vh;
+      margin-bottom: -7px;
+      /*Fix for safari gap*/
+      min-height: 100px;
+      max-height: 150px;
+    }
+
+    /* Animation */
+
+    .parallax>use {
+      animation: move-forever 25s cubic-bezier(.55, .5, .45, .5) infinite;
+    }
+
+    .parallax>use:nth-child(1) {
+      animation-delay: -2s;
+      animation-duration: 7s;
+    }
+
+    .parallax>use:nth-child(2) {
+      animation-delay: -3s;
+      animation-duration: 10s;
+    }
+
+    .parallax>use:nth-child(3) {
+      animation-delay: -4s;
+      animation-duration: 13s;
+    }
+
+    .parallax>use:nth-child(4) {
+      animation-delay: -5s;
+      animation-duration: 20s;
+    }
+
+    @keyframes move-forever {
+      0% {
+        transform: translate3d(-90px, 0, 0);
+      }
+
+      100% {
+        transform: translate3d(85px, 0, 0);
+      }
+    }
+
+    /*Shrinking for mobile*/
+    @media (max-width: 768px) {
+      .waves {
+        height: 40px;
+        min-height: 40px;
+      }
+
+      .content {
+        height: 30vh;
+      }
+
+      h1 {
+        font-size: 24px;
+      }
+    }
+  </style>
+  <!-- Login Content -->
+  <script src="<?php echo e(asset('vendor/jquery/jquery.min.js')); ?>"></script>
+  <script src="<?php echo e(asset('vendor/bootstrap/js/bootstrap.bundle.min.js')); ?>"></script>
+  <script src="<?php echo e(asset('vendor/jquery-easing/jquery.easing.min.js')); ?>"></script>
+  <script src="<?php echo e(asset('js/ruang-admin.min.js')); ?>"></script>
+  <script>
+    $(document).ready(function() {
+      input = $('#InputPassword')[0]
+      $(document).on('click', '#show_password', function() {
+        if (input.type === "password") {
+          icon = $('.fas.fa-eye-slash')
+          icon.removeClass(["fas", "fa-eye-slash"])
+          icon.addClass(['fas', 'fa-eye'])
+          input.type = "text";
+        } else {
+          icon = $('.fas.fa-eye')
+          icon.removeClass('fas fa-eye')
+          icon.addClass(["fas", "fa-eye-slash"])
+          input.type = "password";
+        }
+      })
+    })
+  </script>
+</body>
+
+</html><?php /**PATH C:\Users\Lokmane\Desktop\example-app\resources\views/login-index.blade.php ENDPATH**/ ?>
