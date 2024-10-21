@@ -50,20 +50,20 @@
                   <!-- sample -->
                   <?php $__currentLoopData = $students; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $student): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                   <tr>
-                    <td><?php echo e($student['student_id']); ?></td>
-                    <td><?php echo e($student['student_first_name']); ?></td>
-                    <td><?php echo e($student['student_last_name']); ?></td>
-                    <td><?php echo e($student['student_email']); ?></td>
-                    <td><?php echo e($student->group->group_name); ?></td>
-                    <td><a href="<?php echo e(route('students.edit',$student['student_id'])); ?>"><i class='purple-icon fas fa-fw fa-edit'></i></a></td>
+                    <td><?php echo e($student->id); ?></td>
+                    <td><?php echo e($student->first_name); ?></td>
+                    <td><?php echo e($student->last_name); ?></td>
+                    <td><?php echo e($student->email); ?></td>
+                    <td><?php echo e($student->group->name); ?></td>
+                    <td><a href="<?php echo e(route('students.edit',$student)); ?>"><i class='purple-icon fas fa-fw fa-edit'></i></a></td>
                     <td>
-                        <form method="post" action="<?php echo e(route('students.destroy',$student['student_id'])); ?>">
+                        <form method="post" action="<?php echo e(route('students.destroy',$student)); ?>">
                         <?php echo method_field("DELETE"); ?>
                         <?php echo csrf_field(); ?>
                         <button style="all:unset" type="submit"><i class='purple-icon fas fa-fw fa-trash'></i>
                         </form>
                     </td>
-                    <td><a href="" class='btn btn-primary'>Edit</a></td>
+                    <td><a href="<?php echo e(route('student.editPassword',$student)); ?>" class='btn btn-primary'>Edit</a></td>
                   </tr>
                   <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                 </tbody>

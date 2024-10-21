@@ -5,41 +5,73 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\Pivot;
 
-class Study extends Pivot
+class SessionDate extends Pivot
 {
     use HasFactory;
-    protected $primaryKey = 'study_id';
-    protected $table = 'study';
+    protected $table = 'sessionDates';
     protected $fillable = [
-        'study_id',
-        'session_id',
-        'group_teaching_id',
+        'id',
+        'start_at',
+        'end_at',
+        'gr_mod_type_teacher_id',
+        'group_id',
+        'module_id',
+        'sessionType_id',
+        'teacher_id',
     ];
 
-    public function group_Teaching()
-    {
-        return $this->hasOne('App\Models\Gr_Teaching', 'group_teaching_id', 'group_teaching_id');
+    function group_Module_SessionType_Teacher()  {
+        return $this->belongsTo(Group_Module_SessionType_Teacher::class);
     }
     
-    public function session()
+    public function student()
+    {   // absences
+        return $this->belongsToMany(Student::class);
+    }
+    public function group()
     {
-        return $this->hasOne('App\Models\Session', 'session_id', 'session_id');
+        return $this->hasOne(Group::class);
     }
-    public function absentStudents()
+    public function module()
     {
-        return $this->belongsToMany('App\Models\Student','absences','study_id','student_id','study_id','student_id')->withPivot('status');
+        return $this->hasOne(Module::class);
     }
- 
-    public function absences(){
-        return $this->hasMany('App\Models\Absence','study_id','study_id');
+    public function sessionType()
+    {
+        return $this->hasOne(SessionType::class);
     }
-    public function group(){
-        return $this->hasOneThrough('App\Models\Group','App\Models\Gr_Teaching','group_teaching_id','group_id','group_teaching_id','group_id');
+    public function teacher()
+    {
+        return $this->hasOne(Teacher::class);
     }
 
-    public function presentStudents(){
-        return $this->group->students()->whereNotIn('student_id',$this->absentStudents->pluck('student_id')->toArray());
-    }
+    // TODO automate the other foreign keys you added which are dublicated data 
+    // public function group_Teaching()
+    // {
+    //     return $this->hasOne('App\Models\Gr_Teaching', 'group_teaching_id', 'group_teaching_id');
+    // }
+    
+    // public function session()
+    // {
+    //     return $this->hasOne('App\Models\Session', 'session_id', 'session_id');
+    // }
+    // public function absentStudents()
+    // {
+    //     return $this->belongsToMany('App\Models\Student','absences','study_id','student_id','study_id','student_id')->withPivot('status');
+    // }
+ 
+    // public function absences(){
+    //     return $this->hasMany('App\Models\Absence','study_id','study_id');
+    // }
+    // public function group(){
+    //     return $this->hasOneThrough('App\Models\Group','App\Models\Gr_Teaching','group_teaching_id','group_id','group_teaching_id','group_id');
+    // }
+
+    // public function presentStudents(){
+    //     return $this->group->students()->whereNotIn('student_id',$this->absentStudents->pluck('student_id')->toArray());
+    // }
+
+    // TODO move all other logic into another class
     public function getStudentStatus($student_id){
         $res= $this->absentStudents()->where('absences.student_id','=',$student_id)->get()->first();
         
@@ -79,5 +111,11 @@ class Study extends Pivot
             ->where('teaching.teacher_id', '=', $teacher_id)
             ->get()->count();
     }
+    // TODO NOTE this function was copied from older model Session Model 
+    // public static function findOrCreate($date)
+    // {
+    //     $obj = static::where('session_date', $date)->get()->first();
+    //     return $obj ?: new static;
+    // }
 
 }

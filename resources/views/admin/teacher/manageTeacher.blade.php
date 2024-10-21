@@ -51,17 +51,17 @@
                   <!-- sample -->
                   @foreach ($teachers as $teacher)
                   <tr>
-                    <td>{{$teacher['teacher_id']}}</td>
-                    <td>{{$teacher['teacher_first_name']}}</td>
-                    <td>{{$teacher['teacher_last_name']}}</td>
-                    <td>{{$teacher['teacher_grade']}}</td>
-                    <td>{{$teacher['teacher_email']}}</td>
-                    <td>{{$teacher['teacher_phone']}}</td>
+                    <td>{{$teacher['id']}}</td>
+                    <td>{{$teacher['first_name']}}</td>
+                    <td>{{$teacher['last_name']}}</td>
+                    <td>{{$teacher['grade']}}</td>
+                    <td>{{$teacher['email']}}</td>
+                    <td>{{$teacher['phone']}}</td>
 
 
-                    <td><i id='editButton' data-teacher-id="{{$teacher['teacher_id']}}" class='purple-icon fas fa-fw fa-edit'></i></td>
-                    <td><i id='deleteButton' data-teacher-id="{{$teacher['teacher_id']}}" data-teacher-full_name="{{$teacher['teacher_first_name']}}   {{$teacher['teacher_last_name']}}" data-toggle="modal" data-target="#exampleModal" class='purple-icon fas fa-fw fa-trash'></i></td>
-                    <td><a href="{{route('editTeacherPassword',['id'=>$teacher['teacher_id']])}}" class='btn btn-primary'>Edit</a></td>
+                    <td><i id='editButton' data-teacher-id="{{$teacher->id}}" class='purple-icon fas fa-fw fa-edit'></i></td>
+                    <td><i id='deleteButton' data-teacher-id="{{$teacher->id}}" data-teacher-full_name="{{$teacher['first_name']}}   {{$teacher['last_name']}}" data-toggle="modal" data-target="#exampleModal" class='purple-icon fas fa-fw fa-trash'></i></td>
+                    <td><a href="{{route('teachers.show',$teacher->id)}}" class='btn btn-primary'>Edit</a></td>
                   </tr>
                   @endforeach
                 </tbody>
@@ -96,210 +96,6 @@
 
 
 
-
-    $("#submit").on("click", function() {
-      emptyErrorSpan()
-
-      let allData = {
-
-      };
-
-      $.each($('form').serializeArray(), function(i, field) {
-        allData[field.name] = field.value;
-      });
-
-
-      $.post("{{route('storeTeacher')}}", {
-        '_token': "{{csrf_token()}}",
-        'data': allData
-      }, function(response) {
-        if (response.status) {
-
-          let tr = []
-
-          $.each(allData, function(index, value) {
-
-            if (index == 'teacher_password') {
-              return;
-            }
-
-            tr.push(value);
-
-          });
-
-          tr.push(`<i id='editButton' data-teacher-id="${allData.teacher_id}" class='purple-icon fas fa-fw fa-edit'></i>`);
-          tr.push(`<i id='deleteButton' data-teacher-id="${allData.teacher_id}" data-teacher-full_name="${allData.teacher_first_name}  ${allData.teacher_last_name}" data-toggle="modal" data-target="#exampleModal" class='purple-icon fas fa-fw fa-trash'></i>`);
-
-          let url = `{{route('editTeacherPassword',['id'=>128])}}`;
-          url = url.replace('128', allData.teacher_id);
-          tr.push(`<a href="${url}" class='btn btn-primary'>Edit</a>`);
-
-
-
-          table.row.add(tr).draw();
-
-          resetForm()
-
-        } else {
-          displayErrorMessage(response.message)
-          fillErrorSpan(response.errors);
-
-        }
-      });
-    });
-    $(document).on("click", "#deleteButton", function() {
-
-
-      let trElement = $(this).parent().parent();
-      let teacherId = $(this).attr('data-teacher-id')
-      let full_name = $(this).attr('data-teacher-full_name')
-
-      var YOUR_MESSAGE_STRING_CONST = `Do You want to Delete Teacher <b>${full_name}</b>`;
-
-      confirmDialog(YOUR_MESSAGE_STRING_CONST, function() {
-        $.post("{{route('destroyTeacher')}}", {
-          _token: "{{csrf_token()}}",
-          teacher_id: teacherId
-        }, function(response) {
-
-
-          if (response.status) {
-            table.row(trElement).remove().draw();
-          } else {
-            displayErrorMessage(response.message)
-
-            // console.log(response.errors);
-          }
-        })
-
-      });
-
-
-      function confirmDialog(message, onConfirm) {
-        var fClose = function() {
-          modal.modal("hide");
-        };
-        var modal = $("#confirmModal");
-        modal.modal("show");
-        $("#confirmMessage").empty().append(message);
-        $("#confirmOk").unbind().one('click', onConfirm).one('click', fClose);
-        $("#confirmCancel").unbind().one("click", fClose);
-      }
-
-
-    });
-    $(document).on("click", "#editButton", function() {
-
-
-      updateTrElement = $(this).parent().parent();
-
-      let teacherId = $(this).attr('data-teacher-id')
-
-
-      $.post("{{route('editTeacher')}}", {
-        '_token': "{{csrf_token()}}",
-        'teacher_id': teacherId
-      }, function(response) {
-        if (response.status) {
-          $('#formContainer').html(response.view)
-          $('#formContainer')[0].scrollIntoView();
-        } else {
-          displayErrorMessage(response.message)
-
-          // console.log("error");
-        }
-
-
-
-      });
-    });
-    $(document).on('click', '#update', function() {
-
-      emptyErrorSpan()
-      let allData = {};
-      $.each($('form').serializeArray(), function(i, field) {
-        allData[field.name] = field.value;
-      });
-
-      $.post("{{route('updateTeacher')}}", {
-        '_token': "{{csrf_token()}}",
-        'data': allData
-      }, function(response) {
-
-        if (response.status) {
-
-          let tr = []
-          let teacherId;
-
-
-          $.each(allData, function(index, value) {
-
-
-            if (index == 'teacher_old_id') {
-              return
-            }
-            tr.push(value);
-
-          });
-          tr.push(`<i id='editButton' data-teacher-id="${allData.teacher_id}" class='purple-icon fas fa-fw fa-edit'></i>`);
-          tr.push(`<i id='deleteButton' data-teacher-id="${allData.teacher_id}"  data-teacher-full_name="{{$teacher['teacher_first_name']}}   {{$teacher['teacher_last_name']}}" class='purple-icon fas fa-fw fa-trash'></i>`);
-          let url = `{{route('editTeacherPassword',['id'=>128])}}`;
-          url = url.replace('128', allData.teacher_id);
-          tr.push(`<a href="${url}" class='btn btn-primary'>Edit</a>`);
-
-
-          table.row(updateTrElement).data(tr).draw();
-          $('#formContainer').html(response.view)
-          $('table')[0].scrollIntoView();
-          resetForm()
-
-        } else {
-          displayErrorMessage(response.message)
-
-          fillErrorSpan(response.errors)
-        }
-      });
-    })
-
-    function resetForm() {
-      $(':input', 'form')
-        .not(':button, :submit, :reset, :hidden')
-        .val('')
-        .removeAttr('checked')
-        .removeAttr('selected');
-    }
-
-    function emptyErrorSpan() {
-      for (const span of $('.invalid-feedback')) {
-
-        span.innerHTML = '';
-
-        span.parentElement.querySelector('input').classList.remove("is-invalid");
-      }
-      $('.alert.alert-danger').remove()
-    }
-
-    function fillErrorSpan(errors) {
-      $.each(errors, function(key, value) {
-        let span = $("#" + key + "_error");
-        let input = span.parent().find("input").addClass('is-invalid')
-        span.html(value[0])
-      });
-    }
-
-    function displayErrorMessage(message) {
-      if ($('.alert.alert-danger').length) {
-        $('.alert.alert-danger').html(message)
-      } else {
-        $('#container-wrapper').prepend(
-          `
-          <div class="alert alert-danger" role="alert">
-          ${message}
-          </div>
-          `
-        )
-      }
-    }
   })
 </script>
 </body>

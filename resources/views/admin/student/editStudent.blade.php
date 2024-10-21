@@ -24,36 +24,37 @@
 
         <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
           <h6 class="m-0 font-weight-bold text-primary">Upadte A Student</h6>
-          update {{$student['student_first_name']}} {{$student['student_last_name']}}
+          update {{$student['first_name']}} {{$student['last_name']}}
         </div>
         <div class="card-body">
           <form method="post" action="{{route('students.update',$student)}}">
             @method("PATCH")
             @csrf
             <div class="form-group row mb-3">
-              <input type="hidden" name="student_id" value="{{$student->student_id }}">
+              <input type="hidden" name="id" value="{{$student->id }}">
               <div class="col-xl-6">
                 <label class="form-control-label">Student Card Number<span class="text-danger ml-2">*</span></label>
-                <input type="number" class="form-control @error('student_card') is-invalid @enderror" name="student_card" value="{{ old('student_card', $student->student_card )}}">
-                <span id="student_card_error" class="invalid-feedback">{{ $errors->first('student_card') }}</span>
+                <input type="number" class="form-control @error('card_number') is-invalid @enderror" name="card_number" value="{{ old('card_number', $student->card_number )}}">
+                <span id="card_number_error" class="invalid-feedback">{{ $errors->first('card_number') }}</span>
               </div>
 
               <div class="col-xl-6">
                 <label class="form-control-label">Firstname<span class="text-danger ml-2">*</span></label>
-                <input type="text" class="form-control @error('student_first_name') is-invalid @enderror" required name="student_first_name" value="{{ old('student_first_name', $student->student_first_name )}}">
-                <span id="student_first_name_error" class="invalid-feedback">{{ $errors->first('student_first_name') }}</span>
+                <input type="text" class="form-control @error('first_name') is-invalid @enderror" required name="first_name" value="{{ old('first_name', $student->first_name )}}">
+                <span id="first_name_error" class="invalid-feedback">{{ $errors->first('first_name') }}</span>
               </div>
 
               <div class="col-xl-6">
                 <label class="form-control-label">Lastname<span class="text-danger ml-2">*</span></label>
-                <input type="text" class="form-control @error('student_last_name') is-invalid @enderror" required name="student_last_name" value="{{ old('student_last_name',$student->student_last_name )}}">
-                <span id="student_last_name_error" class="invalid-feedback">{{ $errors->first('student_last_name') }}</span>
+                <input type="text" class="form-control @error('last_name') is-invalid @enderror" required name="last_name" value="{{ old('last_name',$student->last_name )}}">
+                <input type="text" class="form-control @error('password') is-invalid @enderror" required name="password" value="{{ old('password',$student->password )}}">
+                <span id="last_name_error" class="invalid-feedback">{{ $errors->first('last_name') }}</span>
               </div>
 
               <div class="col-xl-6">
                 <label class="form-control-label">Email Address<span class="text-danger ml-2">*</span></label>
-                <input type="email" class="form-control @error('student_email') is-invalid @enderror" required name="student_email" value="{{ old('student_email',$student->student_email )}}">
-                <span id="student_email_error" class="invalid-feedback">{{ $errors->first('student_email') }}</span>
+                <input type="email" class="form-control @error('email') is-invalid @enderror" required name="email" value="{{ old('email',$student->email )}}">
+                <span id="email_error" class="invalid-feedback">{{ $errors->first('email') }}</span>
               </div>
 
               <div class="col-xl-6">
@@ -61,7 +62,7 @@
                 <select required name="group_id" class="form-control mb-3 @error('group_id') is-invalid @enderror">
                   <option>--Select Group--</option>
                   @foreach($groups as $group)
-                  <option @if($student->group_id==$group->group_id) selected @endif value='{{$group->group_id}}'>{{$group->group_name}}</option>
+                  <option @if($student->group_id==$group->id) selected @endif value='{{$group->id}}'>{{$group->name}}</option>
                   @endforeach
                 </select>
                 <span class="text-danger" id="group_id_error">{{ $errors->first('group_id') }}</span>

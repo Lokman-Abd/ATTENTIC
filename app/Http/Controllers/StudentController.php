@@ -19,13 +19,13 @@ class StudentController extends Controller
 
     public function index()
     {
-        $students =Student::with("group")->get();
-        $groups = Group::all();
-        $data = [
-            'students'   => $students,
-            'groups'=>$groups
-        ];
-        return view('admin.student.manageStudent')->with($data);
+        $studentsWithGroup = Student::with('group')->get();
+        $allGroups = Group::all();
+
+        return view('admin.student.manageStudent', [
+            'students' => $studentsWithGroup,
+            'groups' => $allGroups,
+        ]);
     }
 
 
@@ -46,13 +46,13 @@ class StudentController extends Controller
 
 
     public function update(Student $student,StudentFrom $request)
-    {      
+    {   
         $student->update($request->only(
-            ['student_card',
-            'student_first_name',
-            'student_last_name',
+            ['card_number',
+            'first_name',
+            'last_name',
             'group_id',
-            'student_email']));
+            'email']));
         return redirect(route('students.index'))->withSuccess("Student Updated Successfully");
     }
 
@@ -66,9 +66,9 @@ class StudentController extends Controller
     public function editStudentPassword(Student $student)
     {
         $data = [
-            'student_id'=>$student->student_id,
+            'id'=>$student->id,
         ];
-       return view('admin.student.update_student_password')->with($data);
+        return view('admin.student.update_student_password')->with($data);
         
     }
 
@@ -76,10 +76,10 @@ class StudentController extends Controller
     {
         // TODO add only admin or student can change password 
         $request->validate([
-            'student_new_password' => 'required|confirmed|min:6'
+            'new_password' => 'required|confirmed|min:6'
         ]);
         $student->update([
-            'student_password' =>bcrypt($request->password)
+            'password' =>$request->password
         ]);
         return redirect(route('students.index'))->withSuccess('Password changed successfully');  
     }

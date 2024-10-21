@@ -15,12 +15,12 @@ return new class extends Migration
     {
         Schema::create('justifications', function (Blueprint $table) {
             $table->bigIncrements('justification_id');
-            $table->unsignedBigInteger('student_id');
+            $table->foreignId('student_id')->constrained();
             $table->string('img_path');
-            $table->string('justification_status');
+            $table->enum('justification_status',['accepted','refused','unseen'])->default('unseen');
             $table->dateTime('start_at');
             $table->dateTime('end_at');
-            $table->foreign('student_id')->references('student_id')->on('students')->onDelete('cascade');
+            // $table->foreign('student_id')->onDelete('cascade');
             $table->timestamps();
         });
     }

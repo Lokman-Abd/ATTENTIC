@@ -13,16 +13,14 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('teachers', function (Blueprint $table) {
+        Schema::create('module_sessionType_teacher', function (Blueprint $table) {
             $table->id();
-            $table->string('first_name');
-            $table->string('last_name');
-            $table->string('grade');
-            $table->string('email')->unique();
-            $table->string('phone');
-            $table->string('password');
+            $table->foreignId('module_sessionType_id')->constrained(table: 'module_sessionType');
+            $table->foreignId('teacher_id')->constrained();
+            // $table->foreign('module_sessionType_id')->onDelete('cascade');
+            // $table->foreign('teacher_id')->onDelete('cascade');
+        
             $table->timestamps();
-            $table->rememberToken();
         });
     }
 
@@ -33,6 +31,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('teachers');
+        Schema::dropIfExists('module_sessionType_teacher');
     }
 };

@@ -9,33 +9,31 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 class Absence extends Pivot
 {
     use HasFactory;
-    protected $primaryKey = 'absence_id';
-    public $timestamps = false;
-    protected $table = 'absences';
     protected $fillable = [
-        'absence_id',
-        'study_id',
+        'id',
+        'sessionDate_id',
         'student_id',
         'status',
     ];
 
 
-    public function study()
-    {
-        return $this->hasOne('App\Models\Study', 'study_id', 'study_id');
-    }
-    public function student()
-    {
-        return $this->hasOne('App\Models\Student', 'student_id', 'student_id');
-    }
-    public function session()
-    {
-        return $this->hasOneThrough('App\Models\Session', 'App\Models\Study', 'study_id', 'session_id', 'study_id', 'session_id');
-    }
-    public function groupTeaching()
-    {
-        return $this->hasOneThrough('App\Models\Gr_Teaching', 'App\Models\Study', 'study_id', 'group_teaching_id', 'study_id', 'group_teaching_id')->first();
-    }
+    
+    // public function study()
+    // {
+    //     return $this->hasOne('App\Models\Study', 'study_id', 'study_id');
+    // }
+    // public function student()
+    // {
+    //     return $this->hasOne('App\Models\Student', 'student_id', 'student_id');
+    // }
+    // public function session()
+    // {
+    //     return $this->hasOneThrough('App\Models\Session', 'App\Models\Study', 'study_id', 'session_id', 'study_id', 'session_id');
+    // }
+    // public function groupTeaching()
+    // {
+    //     return $this->hasOneThrough('App\Models\Gr_Teaching', 'App\Models\Study', 'study_id', 'group_teaching_id', 'study_id', 'group_teaching_id')->first();
+    // }
     public static function getAbsentStudentsNumberToday()
     {
         return DB::table('absences')
@@ -63,6 +61,7 @@ class Absence extends Pivot
             ->select('students.student_email', 'students.student_first_name', 'students.student_last_name', 'students.student_email', 'types.type', 'modules.short_cut', 'sessions.session_date', 'students.group_id', 'teachers.teacher_first_name', 'teachers.teacher_last_name')
             ->get();
     }
+    // TODO this logic hould copied into another class
     public static function getAbsentPercentage()
     {
         $absence_this_month = self::whereRelation('session', 'sessions.session_date', 'like', '%' . date("Y-m") . '%')->get()->count();
@@ -80,7 +79,7 @@ class Absence extends Pivot
             ->join('sessions', 'sessions.session_id', '=', 'study.session_id')
             ->Where('absences.student_id', '=', $student_id)
             ->whereBetween('sessions.session_date', [$start_date, date('Y-m-d', strtotime($end_date . ' +1 day'))])
-            ->get()->pluck('absence_id')->toArray();
+            ->get()->pluck('id')->toArray();
     }
 public static function  getExcludedStudents()
     {

@@ -14,8 +14,8 @@ return new class extends Migration
     public function up()
     {
         Schema::create('modules', function (Blueprint $table) {
-            $table->bigIncrements('module_id');
-            $table->string('module_name');
+            $table->id();
+            $table->string('title');
             $table->string('short_cut');
             $table->timestamps();
         });

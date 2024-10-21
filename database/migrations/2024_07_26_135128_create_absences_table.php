@@ -14,12 +14,12 @@ return new class extends Migration
     public function up()
     {
         Schema::create('absences', function (Blueprint $table) {
-            $table->bigIncrements('absence_id');
-            $table->unsignedBigInteger('study_id');
-            $table->unsignedBigInteger('student_id');
-            $table->tinyInteger('status'); // Assuming 'status' is a tiny integer
-            $table->foreign('study_id')->references('study_id')->on('study')->onDelete('cascade');
-            $table->foreign('student_id')->references('student_id')->on('students')->onDelete('cascade');
+            $table->id();
+            $table->foreignId('sessionDate_id')->constrained();
+            $table->foreignId('student_id')->constrained();
+            $table->enum('status',['justifficated','injustificated'])->default('injustificated');
+            // $table->foreign('sessionDate_id')->onDelete('cascade');
+            // $table->foreign('student_id')->onDelete('cascade');
         
             $table->timestamps();
         });

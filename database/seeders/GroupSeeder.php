@@ -15,8 +15,9 @@ class GroupSeeder extends Seeder
      */
     public function run()
     {
-        Group::create(['group_id' => 1, 'group_name' => 'Group A']);
-        Group::create(['group_id' => 2, 'group_name' => 'Group B']);
-        Group::create(['group_id' => 3, 'group_name' => 'Group C']);
+        // TODO fix this to in one querry
+        Group::create(['name' => 'Group A']);
+        Group::create(['name' => 'Group B']);
+        Group::create(['name' => 'Group C']);
     }
 }

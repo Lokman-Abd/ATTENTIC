@@ -1,6 +1,7 @@
 <?php
 namespace App\Models;
 
+use App\Traits\UserHandler;
 use Illuminate\Foundation\Auth\User as Authenticatable; 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
@@ -8,52 +9,50 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 class Student extends Authenticatable
 {
     use HasFactory;
-    protected $primaryKey = 'student_id';
-    protected $table = 'students';
-    public $timestamps=false;
+    use UserHandler;
     protected $fillable = [
-        'student_card',
-        'student_first_name',
-        'student_last_name', 
-        'student_password', 
-        'student_email', 
+        'card_number',
+        'first_name',
+        'last_name', 
+        'password', 
+        'email', 
         'group_id',
     ];
     // protected $hidden = [
-    //     'student_password',
+    //     'password',
     // ];
     protected $guard = 'student';
 
-    
-    public function getAuthPassword()
-    {
-        return $this->student_password;
-    }
-    public function MissStudies()
-    {
-        return $this->belongsToMany('App\Models\Study','absences','student_id','study_id','student_id','study_id');
-    }
-    public function absences(){
-        return $this->hasMany('App\Models\Absence','student_id','student_id');
-    }
 
-    public function justifications()
-    {
-        return $this->hasMany('App\Models\Justification','student_id','student_id');
-    }
-    
 
     public function group()
     {
-        return $this->belongsTo('App\Models\Group','group_id','group_id');   
+        return $this->belongsTo(Group::class);
     }
 
+    public function sessionDate(){
+        // absences
+        return $this->belongsToMany(SessionDate::class);
+    }
+    
+    function justifications(){
+        return $this->hasMany(Justification::class);
+    }
+    
+    // TODO fix this after you remove study model
+    // public function MissStudies()
+    // {
+    //     return $this->belongsToMany(Study::class,'absences','id','study_id','id','study_id');
+    // }
+    // public function justifications()
+    // {
+    //     return $this->hasMany(Justification::class);
+    // }
+
+    // TODO move this function 
     public function getMyStatusInThisDate($date)
     {
        $res= $this->absences()->whereRelation('session', 'sessions.session_date', '=', $date)->get()->first();
-        
-       
-        
     //    $st=(object) collect(['status' => 'present'])->all();
        $col=(object) collect(['status' => 'present'])->all();
        // $col->put("pivot",'lok');
@@ -70,7 +69,5 @@ class Student extends Authenticatable
         // return;
         // // return $this->MissStudies()->get();
     }
-    public static function getAllStudentsNumber(){
-        return self::get()->count();
-    }
+    // TODO move also this function 
 }

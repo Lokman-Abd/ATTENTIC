@@ -22,26 +22,25 @@
           update student password
         </div>
         <div class="card-body">
-          <form method="post" action='{{route("updateStudentPassword",$student_id)}}'>
+          <form method="post" action='{{route("updateStudentPassword",$id)}}'>
             @csrf
             <div class="form-group row mb-3">
 
 
               <div class="col-xl-6">
                 <label class="form-control-label">New Password<span class="text-danger ml-2">*</span></label>
-                <input type="password" class="form-control" required name="student_new_password">
-                @if($errors->has('student_new_password'))
-                <span class="text-danger">{{$errors->first('student_new_password')}}</span>
+                <input type="password" class="form-control" required name="new_password">
+                @if($errors->has('new_password'))
+                <span class="text-danger">{{$errors->first('new_password')}}</span>
                 @endif
               </div>
               <div class="col-xl-6">
                 <label class="form-control-label">confirm password<span class="text-danger ml-2">*</span></label>
-                <input type="password" class="form-control" required name="student_new_password_confirmation">
+                <input type="password" class="form-control" required name="new_password_confirmation">
               </div>
-              <input type="hidden" name="student_id" value="{{$student_id}}">
+              <input type="hidden" name="id" value="{{$id}}">
               <div class="col-xl-6 mt-3">
                 <button type="submit" id='submit' class="btn btn-primary">Update</button>
-
               </div>
             </div>
           </form>

@@ -6,7 +6,7 @@ use App\Models\Student;
 use Illuminate\Validation\Rule;
 use Illuminate\Foundation\Http\FormRequest;
 
-class StudentFrom extends FormRequest
+class TeacherFrom extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -27,12 +27,14 @@ class StudentFrom extends FormRequest
     {
         $id = $this->request->get("id");
         return [
-            'card_number' => ['required', 'unique:students,card_number,'.$id, 'numeric'],
-            'first_name' => 'required',
-            'last_name' => 'required',
-            'email' => ['required', 'unique:students,email,'.$id],
-            'group_id' => ['required', 'exists:groups,id'],
+            'id' =>['required','unique:teachers','numeric'],
+            'first_name' =>'required',
+            'last_name' =>'required',
+            'grade' =>'required',
+            'email' =>['required', 'unique:teachers,email,'.$id,],
+            'phone' =>['required', 'unique:teachers,phone,'.$id,],
             'password' => [Rule::requiredIf(!$id),'min:6'],
+            
         ];
     }
 }

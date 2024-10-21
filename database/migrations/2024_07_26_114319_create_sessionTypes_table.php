@@ -13,9 +13,9 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('types', function (Blueprint $table) {
-            $table->bigIncrements('type_id');
-            $table->string('type');
+        Schema::create('sessionTypes', function (Blueprint $table) {
+            $table->id();
+            $table->enum('type',['td','tp','course']);
             $table->timestamps();
         });
     }
@@ -27,6 +27,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('types');
+        Schema::dropIfExists('session_types');
     }
 };

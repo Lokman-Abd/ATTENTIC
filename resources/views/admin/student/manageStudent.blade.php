@@ -49,14 +49,14 @@
                   <!-- sample -->
                   @foreach ($students as $student)
                   <tr>
-                    <td>{{$student['student_id']}}</td>
-                    <td>{{$student['student_first_name']}}</td>
-                    <td>{{$student['student_last_name']}}</td>
-                    <td>{{$student['student_email']}}</td>
-                    <td>{{$student->group->group_name}}</td>
-                    <td><a href="{{route('students.edit',$student['student_id'])}}"><i class='purple-icon fas fa-fw fa-edit'></i></a></td>
+                    <td>{{$student->id}}</td>
+                    <td>{{$student->first_name}}</td>
+                    <td>{{$student->last_name}}</td>
+                    <td>{{$student->email}}</td>
+                    <td>{{$student->group->name}}</td>
+                    <td><a href="{{route('students.edit',$student)}}"><i class='purple-icon fas fa-fw fa-edit'></i></a></td>
                     <td>
-                        <form method="post" action="{{route('students.destroy',$student['student_id'])}}">
+                        <form method="post" action="{{route('students.destroy',$student)}}">
                         @method("DELETE")
                         @csrf
                         <button style="all:unset" type="submit"><i class='purple-icon fas fa-fw fa-trash'></i>

@@ -6,7 +6,7 @@ use App\Http\Controllers\TypingController;
 use App\Http\Controllers\StudentController;
 use App\Http\Controllers\TeacherController;
 use App\Http\Controllers\Absence_controller;
-use App\Http\Controllers\AuthTestController;
+use App\Http\Controllers\AuthController;
 use App\Http\Controllers\TeachingController;
 use App\Http\Controllers\GroupTeachingController;
 use App\Http\Controllers\justification_controller;
@@ -29,13 +29,13 @@ Route::view('/welecome','welecome');
 Route::view('/','welecome');
 
 // Log In
-Route::controller(AuthTestController::class)->group(function () {
-    Route::post('checkLoginGuard', 'checkLoginGuard')->name('checkLoginGuard');
+Route::controller(AuthController::class)->group(function () {
+    Route::post('login', 'checkLoginGuard')->name('checkLoginGuard');
     Route::get('login', 'login')->name('login');
     Route::get('logout', 'logout')->name('logout');
-    Route::get('{Auth}/Update/Password', 'updatePassword')->name('updatePassword');
-    Route::post('Post/Update/Password', 'postUpdatePassword')->name('postUpdatePassword');
-    Route::post('contact/Us', 'contactUs')->name('contactUs');
+    Route::get('update/password', 'updatePassword')->name('updatePassword');
+    Route::post('update/password', 'postUpdatePassword')->name('postUpdatePassword');
+    Route::post('contact-us', 'contactUs')->name('contactUs');
 });
 
 Route::controller(ForgotPasswordController::class)->group(function () {
@@ -48,15 +48,16 @@ Route::controller(ForgotPasswordController::class)->group(function () {
 
 // CRUD Teacher 
 Route::prefix('admin')->middleware(['auth:admin'])->group(function () {
+    Route::resource('teachers', TeacherController::class);
     Route::controller(TeacherController::class)->group(function () {
-        Route::get('Dashboard', 'dashboard')->name('dashboard');
-        Route::get('Manage/Teachers', 'manage')->name('manageTeacher');
-        Route::post('Store/Teacher', 'store')->name('storeTeacher');
-        Route::post('Destroy/Teacher', 'destroy')->name('destroyTeacher');
-        Route::post('Edit/Teacher', 'edit')->name('editTeacher');
-        Route::post('Update/Teacher', 'update')->name('updateTeacher');
-        Route::get('Edit/Teacher/Password/{id}',  'editTeacherPassword')->name('editTeacherPassword');
-        Route::post('Update/Teacher/Password',  'updateTeacherPassword')->name('updateTeacherPassword');
+        Route::get('dashboard', 'dashboard')->name('dashboard');
+        // Route::get('manage/teachers', 'manage')->name('manageTeacher');
+        // Route::post('store/teacher', 'store')->name('storeTeacher');
+        // Route::post('destroy/teacher', 'destroy')->name('destroyTeacher');
+        // Route::post('edit/teacher', 'edit')->name('editTeacher');
+        // Route::post('update/teacher', 'update')->name('updateTeacher');
+        Route::get('edit/teacher/Password/{id}',  'editTeacherPassword')->name('editTeacherPassword');
+        Route::post('update/teacher/Password',  'updateTeacherPassword')->name('updateTeacherPassword');
     });
 
     // END CRUD Teacher 

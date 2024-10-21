@@ -13,9 +13,12 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('sessions', function (Blueprint $table) {
-            $table->bigIncrements('session_id');
-            $table->date('session_date');
+        Schema::create('module_sessionType', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('sessionType_id')->constrained();;
+            $table->foreignId('module_id')->constrained();;
+            // $table->foreign('sessionType_id')->onDelete('cascade');
+            // $table->foreign('module_id')->onDelete('cascade');
             $table->timestamps();
         });
     }
@@ -27,6 +30,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('sessions');
+        Schema::dropIfExists('module_sessionType');
     }
 };

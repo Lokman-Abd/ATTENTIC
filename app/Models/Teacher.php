@@ -1,45 +1,42 @@
 <?php
 
 namespace App\Models;
+
+use App\Traits\UserHandler;
 use Illuminate\Foundation\Auth\User as Authenticatable; 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Teacher extends Authenticatable
 {
+    use UserHandler;
     use HasFactory;
-    protected $primaryKey = 'teacher_id';
-    protected $table = 'teachers';
     protected $fillable = [
-        'teacher_id',
-        'teacher_first_name',
-        'teacher_last_name',
-        'teacher_grade',
-        'teacher_email',
-        'teacher_phone',
-        'teacher_password',
+        'id',
+        'first_name',
+        'last_name',
+        'grade',
+        'email',
+        'phone',
+        'password',
         'remember_token'
     ];
     protected $hidden = [
         'remember_token'
     ];
-    public $timestamps=false;
     protected $guard = 'teacher';
     
-    public function getAuthPassword()
-    {
-        return $this->teacher_password;
+    public function module_SessionType(){
+        return $this->belongsToMany(Module_SessionType::class);
     }
-    public function teachTyping(){
-        return $this->belongsToMany('App\Models\Typing','teaching','teacher_id','typing_id','teacher_id','typing_id');
-    }
-    public function teachings(){
-        return $this->hasMany('App\Models\Teaching','teacher_id','teacher_id');
-    }
+    // public function teachings(){
+    //     return $this->hasMany('App\Models\Teaching','id','id');
+    // }
     // public function groupTeaching()
     // {
     //     return $this->teachings()->with('teachGroup.students');
 
     // }
+    // TODO move this logic into another class
     public static function classesOfTeacher($teacher_id)
     {
         return self::find($teacher_id)
@@ -58,9 +55,6 @@ class Teacher extends Authenticatable
         ->groupBy('students.student_id')
         ->select('students.student_id')
         ->get()->count();
-    }
-    public static function getAllTeachersNumber(){
-        return self::get()->count();
     }
     public static function studiesOfTeacher($teacher_id){
         return self::join('teaching', 'teachers.teacher_id', '=', 'teaching.teacher_id')

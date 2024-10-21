@@ -8,6 +8,7 @@ use App\Models\Student;
 use App\Models\Teacher;
 use Illuminate\Http\Request;
 use App\Models\Justification;
+use App\Http\Requests\AuthForm;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -18,70 +19,44 @@ use Illuminate\Support\Facades\Validator;
 use App\Http\Controllers\StudentController;
 use App\Http\Controllers\TeacherController;
 
-class AuthTestController extends Controller
+class AuthController extends Controller
 {
-
+    // TODO remove this function after checking its role
     // public function getUsernameAndCount(){
     //     $this->count = Justification::where('justification_status','=','0')->count();
     //     $this->username= Auth::guard('admin')->user()->admin_first_name . ' '.Auth::guard('admin')->user()->admin_last_name;
     // }
 
+    protected $routes = [
+        'admin' => 'dashboard',
+        'teacher' => 'teacherDashboard',
+        'student' => 'student_dashboard'
+    ];
 
     public function getGuard()
     {
-        if (Auth::guard('admin')->check()) {
-            return 'admin';
-        }
-        if (Auth::guard('teacher')->check()) {
-            return 'teacher';
-        }
-        if (Auth::guard('student')->check()) {
-            return 'student';
+        foreach(array_keys(config('auth.guards')) as $guard){
+
+            if(auth()->guard($guard)->check()) return $guard;
         }
         return null;
     }
     public function login()
     {
         $guard = $this->getGuard();
-        if ($guard === 'admin') {
-
-            return redirect()->route('dashboard');
+        if (!$guard) {
+            return view('login-index');
         }
-        if ($guard === 'teacher') {
-            return redirect()->route('teacherDashboard');
-        }
-        if ($guard === 'student') {
-            return redirect()->route('student_dashboard');
-        }
-        return view('login-index');
+        return redirect()->route($this->routes[$guard]);
     }
-    public function checkLoginGuard(Request $request)
-    {
-        $validator = Validator::make($request->all(), [
-            'userType' => 'required',
-            'email' => 'required|email',
-            'password' => 'required'
-        ]);
-
-        if ($validator->fails()) {
-            return redirect()->back()->withError($validator);
-        }
-
+    public function checkLoginGuard(AuthForm $request)
+    {   
         $userGurad = $request->userType;
 
-        $route = [
-            'admin' => 'dashboard',
-            'teacher' => 'teacherDashboard',
-            'student' => 'student_dashboard'
-        ];
+        if (in_array($userGurad, array_keys(config('auth.guards'))) &&
+        auth($userGurad)->attempt(['email' => $request->email, 'password' => $request->password])) {
 
-        if (in_array($userGurad, ['admin', 'teacher', 'student'])) {
-
-            if (Auth::guard($userGurad)->attempt([$userGurad . '_email' => $request->email, 'password' => $request->password])) {
-
-                return redirect()->intended(route($route[$userGurad]));
-                // return redirect()->route($route[$userGurad]);
-            }
+            return redirect()->intended(route($this->routes[$userGurad]));
         }
 
         return redirect()->back()->withError('Oppes! You have entered invalid credentials')->withInput();
@@ -89,77 +64,42 @@ class AuthTestController extends Controller
 
     public function logout()
     {
-        $guards = array_keys(config('auth.guards'));
-        foreach ($guards as $guard) {
-            if (auth()->guard($guard)->check()) {
-                auth($guard)->logout();
-            }
-            Session::flush();
-            return redirect()->route('login');
-        }
+        $currentGurd=$this->getGuard();
+        auth($currentGurd)->logout();
+        Session::flush();
+        return redirect()->route('login');
     }
-    public function updatePassword(Request $request)
+    public function updatePassword()
     {
         $guard = $this->getGuard();
-        $username = '';
-        $count = '';
-
-        if ($guard === 'admin') {
-
-            $admin = new TeacherController;
-            $admin->getUsernameAndCount();
-            $username = $admin->username;
-            $count = $admin->count;
-        } elseif ($guard === 'teacher') {
-            $teacher = new StudyController;
-            $teacher->getUsername();
-            $username = $teacher->username;
-        } elseif ($guard === 'student') {
-            $student = new justification_controller;
-            $student->getUsername();
-            $username = $student->username;
-        } else {
-            return redirect()->route('login');
-        }
+        if (!$guard) return redirect()->route('login');
         $data = [
             'guard' => $guard,
-            'username' => $username,
-            'count' => $count,
-            'student_id' => ''
+            // 'student_id' => ''
         ];
         return view('update_password')->with($data);
     }
     public function postUpdatePassword(Request $request)
     {
-
         // guard must be admin or student or teacher
         // talbe are admins or students or teachers
-        $users = [
-            'admin' => new Admin,
-            'teacher' => new Teacher,
-            'student' => new Student,
-        ];
-        $guard = $this->getGuard();
-        $guard_id = $request->get($guard . '_id');
-        $currentUser = $users[$guard]->find($guard_id);
-
-        $currentUserPassword = $currentUser->toArray()[$guard . '_password'];
-
+        $currentUser = auth()->user();
+        $currentUserPassword = $currentUser->password;
 
         $validator = Validator::make($request->all(), [
-            $guard . '_current_password' => ['required', function ($attribute, $value, $fail) use ($currentUserPassword) {
+            'current_password' => ['required', function ($attribute, $value, $fail) use ($currentUserPassword) {
                 if (!Hash::check($value, $currentUserPassword)) {
-                    return $fail(__('The current password is incorrect.'));
+                    return $fail('The current password is incorrect.');
                 }
             }],
-            $guard . '_new_password' => ['required', 'confirmed', 'min:6'],
+            'new_password' => ['required', 'confirmed', 'min:6'],
         ]);
 
         if ($validator->fails()) {
             return redirect()->back()->withErrors($validator->errors());
         }
         $currentUser->update([
-            $guard . '_password' => Hash::make($request->get($guard . '_new_password'))
+            'password' => $request->new_password
         ]);
 
         return redirect()->back()->withSuccess('Password changed successfully');

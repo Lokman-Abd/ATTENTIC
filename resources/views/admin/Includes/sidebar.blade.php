@@ -41,7 +41,7 @@
     <div id="collapseBootstrapassests" class="collapse" aria-labelledby="headingBootstrap" data-parent="#accordionSidebar">
       <div class="bg-white py-2 collapse-inner rounded">
         <h6 class="collapse-header">Manage Class Teachers</h6>
-        <a class="collapse-item" href="{{ route('manageTeacher')}}">Manage Teachers</a>
+        <a class="collapse-item" href="{{ route('teachers.index')}}">Manage Teachers</a>
       </div>
     </div>
   </li>

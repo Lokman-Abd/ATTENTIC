@@ -3,6 +3,7 @@
 use App\Models\Admin;
 use App\Models\Student;
 use App\Models\Teacher;
+use Illuminate\Foundation\Auth\User;
 
 return [
 
@@ -40,10 +41,10 @@ return [
     */
 
     'guards' => [
-        // 'web' => [
-        //     'driver' => 'session',
-        //     'provider' => 'users',
-        // ],
+        'web' => [
+            'driver' => 'session',
+            'provider' => 'users',
+        ],
         
         'admin' => [
             'driver' => 'session',
@@ -77,10 +78,10 @@ return [
     */
 
     'providers' => [
-        // 'users' => [
-        //     'driver' => 'eloquent',
-        //     'model' => User::class,
-        // ],
+        'users' => [
+            'driver' => 'eloquent',
+            'model' => User::class,
+        ],
         'admins' => [
             'driver' => 'eloquent',
             'model' => Admin::class,
